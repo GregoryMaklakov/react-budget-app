@@ -385,6 +385,7 @@ select {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+  min-height: calc(100vh - 214px);
   gap: var(--space-lg);
 }
 
@@ -598,6 +599,14 @@ table a {
   border-radius: var(--round-full);
 }
 
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: -100;
+}
 /* toast */
 .Toastify__toast-body {
   font-size: var(--fs-300);
