@@ -1,9 +1,10 @@
 import { useLoaderData } from "react-router-dom";
-import { createBudget, createExpense, fetchData, wait } from "../libs/helpers";
-import Intro from "../components/Intro";
+import { createBudget, createExpense, fetchData, randomWait } from "../libs/helpers";
 import { toast } from "react-toastify";
+import Intro from "../components/Intro";
 import AddBudgetForm from "../components/AddBudgetForm";
 import AddExpenseForm from "../components/AddExpenseForm";
+import BudgetItem from "../components/BudgetItem";
 
 export function dashboardLoader() {
     const userName = fetchData("userName");
@@ -12,7 +13,7 @@ export function dashboardLoader() {
 }
 
 export async function dashboardAction({ request }) {
-    await wait();
+    await randomWait();
     const data = await request.formData();
     const { _action, ...values } = Object.fromEntries(data);
 
@@ -40,8 +41,8 @@ export async function dashboardAction({ request }) {
             createExpense({
                 name: values.newExpense,
                 amount: values.newExpenseAmount,
-                budget: values.newExpenseBudget,
-            })
+                budgetId: values.newExpenseBudget,
+            });
             return toast.success(`Expense ${values.newExpense} created!`);
         } catch (e) {
             throw new Error("Something went wrong...");
@@ -59,10 +60,18 @@ const Dashboard = () => {
                         Welcome back, <span className="accent">{userName}</span>
                     </h1>
                     <div className="grid-sm">
-                        {budgets && budgets.length > 0 ? (<div className="flex-lg">
-                            <AddBudgetForm />
-                            <AddExpenseForm budgets={budgets} />
-                        </div>) : (
+                        {budgets && budgets.length > 0 ? (
+                            <div className="flex-lg">
+                                <AddBudgetForm />
+                                <AddExpenseForm budgets={budgets} />
+                                <h2>Existing budgets</h2>
+                                <div className="budgets">
+                                    {budgets.map((budget) => (
+                                        <BudgetItem key={budget.id} budget={budget} />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
                             <div className="grid-sm">
                                 <p>Personal budgeting is a secret to financial freedom.</p>
                                 <p>Create a budget to get started.</p>
