@@ -1,5 +1,11 @@
-import { useLoaderData } from "react-router-dom";
-import { createBudget, createExpense, fetchData, randomWait } from "../libs/helpers";
+import { Link, useLoaderData } from "react-router-dom";
+import {
+    createBudget,
+    createExpense,
+    deleteItem,
+    fetchData,
+    randomWait,
+} from "../libs/helpers";
 import { toast } from "react-toastify";
 import Intro from "../components/Intro";
 import AddBudgetForm from "../components/AddBudgetForm";
@@ -51,6 +57,17 @@ export async function dashboardAction({ request }) {
             throw new Error("Something went wrong...");
         }
     }
+    if (_action === "deleteExpense") {
+        try {
+            deleteItem({
+                key: "expenses",
+                id: values.expenseId,
+            });
+            return toast.success("Expense deleted!");
+        } catch (e) {
+            throw new Error("There wos a problem deleting your expense!");
+        }
+    }
 }
 
 const Dashboard = () => {
@@ -73,14 +90,24 @@ const Dashboard = () => {
                                         <BudgetItem key={budget.id} budget={budget} />
                                     ))}
                                 </div>
-                                {
-                                    expenses && expenses.length > 0 && (
-                                        <div className="grid-md">
-                                            <h2>Resent Expenses</h2>
-                                            <Table expenses={expenses.sort((a, b) => b.createdAt - a.createdAt)} />
-                                        </div>
-                                    )
-                                }
+                                {expenses && expenses.length > 0 && (
+                                    <div className="grid-md">
+                                        <h2>Resent Expenses</h2>
+                                        <Table
+                                            expenses={expenses
+                                                .sort((a, b) => b.createdAt - a.createdAt)
+                                                .slice(0, 8)}
+                                        />
+                                        {expenses.length > 8 && (
+                                            <Link
+                                                to="expenses"
+                                                className="btn btn--dark"
+                                            >
+                                                View all expenses
+                                            </Link>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="grid-sm">
