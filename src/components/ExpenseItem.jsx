@@ -1,14 +1,14 @@
 import { Link, useFetcher } from "react-router-dom"
+import PropTypes from 'prop-types';
 import { formatCurrency, formatDateToLocalString, getAllMatchingItems } from "../libs/helpers"
 import { TrashIcon } from "@heroicons/react/24/solid";
 
-const ExpenseItem = ({ expense }) => {
+const ExpenseItem = ({ expense, showBudget }) => {
     const budget = getAllMatchingItems({
         category: "budgets",
         key: "id",
         value: expense.budgetId,
     })[0];
-
     const fetcher = useFetcher();
 
     return (
@@ -16,7 +16,7 @@ const ExpenseItem = ({ expense }) => {
             <td>{expense.name}</td>
             <td>{formatCurrency(expense.amount)}</td>
             <td>{formatDateToLocalString(expense.createdAt)}</td>
-            <td>
+            {showBudget && <td>
                 <Link
                     to={`/budget/${budget.id}`}
                     style={{
@@ -24,7 +24,7 @@ const ExpenseItem = ({ expense }) => {
                     }}>
                     {budget.name}
                 </Link>
-            </td>
+            </td>}
             <td>
                 <fetcher.Form method="post">
                     <input type="hidden" name="_action" value="deleteExpense" />
@@ -40,6 +40,10 @@ const ExpenseItem = ({ expense }) => {
             </td>
         </>
     )
+}
+ExpenseItem.propTypes = {
+    expense: PropTypes.object.isRequired,
+    showBudget: PropTypes.bool.isRequired,
 }
 
 export default ExpenseItem

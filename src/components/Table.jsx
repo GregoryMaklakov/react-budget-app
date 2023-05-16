@@ -1,14 +1,14 @@
-import React from 'react'
+import PropTypes from "prop-types";
 import ExpenseItem from './ExpenseItem'
 
-const Table = ({ expenses }) => {
+const Table = ({ expenses, showBudget }) => {
     return (
         <div className='table'>
             <table>
                 <thead>
                     <tr>
                         {
-                            ["Name", "Amount", "Date", "Budget", "",].map((item, idx) => (
+                            ["Name", "Amount", "Date", showBudget ? "Budget" : "", "",].map((item, idx) => (
                                 <th key={idx}>{item}</th>
                             ))
                         }
@@ -17,7 +17,7 @@ const Table = ({ expenses }) => {
                 <tbody>
                     {expenses.map((expense) => (
                         <tr key={expense.id}>
-                            <ExpenseItem expense={expense} />
+                            <ExpenseItem expense={expense} showBudget={showBudget} />
                         </tr>
                     ))}
                 </tbody>
@@ -26,4 +26,11 @@ const Table = ({ expenses }) => {
     )
 }
 
+Table.propTypes = {
+    expenses: PropTypes.array.isRequired,
+    showBudget: PropTypes.bool,
+}
+Table.defaultProps = {
+    showBudget: true,
+}
 export default Table
