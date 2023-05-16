@@ -6,6 +6,8 @@ Budget Management Application using React Router DOM <br>
 The Budget Management Application is a project developed using React, with a primary focus on utilizing React Router DOM. This application serves as a practical tool for budget management and tracking.
 
 You can use all the styles from the index.css file! It contains all the necessary styles and animations for the website.
+You can find additional information and function description by following the link to Notion
+[Notion](https://slender-spell-142.notion.site/React-Budget-App-d114d3d7e71849029386c5f3f2597766)
 
 ### NPM instal
 
