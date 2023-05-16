@@ -3,9 +3,12 @@ import { deleteItem } from "../libs/helpers";
 import { toast } from "react-toastify";
 
 export async function logoutAction() {
-  deleteItem({
-    key: "userName",
+  const keysToDelete = ["userName", "budgets", "expenses"];
+
+  keysToDelete.forEach((key) => {
+    deleteItem({ key });
   });
+
   toast.success("You've deleted your account!");
   return redirect("/");
 }

@@ -1,6 +1,6 @@
 // description in Notion: [https://www.notion.so/React-Budget-App-d114d3d7e71849029386c5f3f2597766?pvs=4]
 export const randomWait = () =>
-  new Promise((res) => setTimeout(res, Math.random() * 2000));
+  new Promise((res) => setTimeout(res, Math.random() * 900));
 
 // colors
 const generateRandomColor = () => {
@@ -45,7 +45,7 @@ export const createExpense = ({ name, amount, budgetId }) => {
   );
 };
 
-// delete item
+// delete item from localStorage
 export const deleteItem = ({ key }) => {
   return localStorage.removeItem(key);
 };
@@ -64,6 +64,10 @@ export const calculateSpentByBudget = (budgetId) => {
 };
 
 // FORMATTING
+
+// Format date to local string
+export const formatDateToLocalString = (epoch) =>
+  new Date(epoch).toLocaleDateString();
 
 // Formatting percentages
 export const formatPercentage = (amt) => {
