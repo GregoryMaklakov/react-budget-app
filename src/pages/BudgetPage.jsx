@@ -1,8 +1,9 @@
 import { useLoaderData } from "react-router-dom";
-import { getAllMatchingItems } from "../libs/helpers";
+import { createExpense, deleteItem, getAllMatchingItems } from "../libs/helpers";
 import BudgetItem from "../components/BudgetItem";
-import AddBudgetForm from "../components/AddBudgetForm";
 import Table from "../components/Table";
+import { toast } from "react-toastify";
+import AddExpenseForm from "../components/AddExpenseForm";
 
 export async function budgetLoader({ params }) {
     const budget = await getAllMatchingItems({
@@ -22,6 +23,35 @@ export async function budgetLoader({ params }) {
     return { budget, expenses };
 }
 
+export async function budgetAction({ request }) {
+    const data = await request.formData();
+    const { _action, ...values } = Object.fromEntries(data);
+
+    if (_action === "createExpense") {
+        try {
+            createExpense({
+                name: values.newExpense,
+                amount: values.newExpenseAmount,
+                budgetId: values.newExpenseBudget,
+            });
+            return toast.success(`Expense ${values.newExpense} created!`);
+        } catch (e) {
+            throw new Error("Something wrong...");
+        }
+    }
+    if (_action === "deleteExpense") {
+        try {
+            deleteItem({
+                key: "expenses",
+                id: values.expenseId,
+            });
+            return toast.success("Expense deleted!");
+        } catch (e) {
+            throw new Error("There wos a problem deleting your expense!");
+        }
+    }
+}
+
 const BudgetPage = () => {
     const { budget, expenses } = useLoaderData();
     return (
@@ -33,8 +63,8 @@ const BudgetPage = () => {
                 Overview
             </h1>
             <div className="flex-lg">
-                <BudgetItem budget={budget} />
-                <AddBudgetForm budgets={[budget]} />
+                <BudgetItem budget={budget} showDelete={true} />
+                <AddExpenseForm budgets={[budget]} />
             </div>
             {
                 expenses && expenses.length > 0 && (
